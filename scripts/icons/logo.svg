@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   preserveAspectRatio="xMidYMid meet"
+   viewBox="0 0 640 640"
+   width="640"
+   height="640"
+   id="svg32"
+   sodipodi:docname="logo.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+  <metadata
+     id="metadata36">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="944"
+     id="namedview34"
+     showgrid="false"
+     inkscape:zoom="0.36875"
+     inkscape:cx="320"
+     inkscape:cy="320"
+     inkscape:window-x="1280"
+     inkscape:window-y="30"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg32" />
+  <defs
+     id="defs14">
+    <path
+       d="M102.03 463.68L352.92 414.42L338.06 460C226.99 483.63 157.57 498.4 129.81 504.31C119.29 506.55 108.98 499.72 106.95 489.16C106.29 485.76 104.66 477.27 102.03 463.68Z"
+       id="b12XMoy0dj" />
+    <path
+       d="M192.19 80.85L232.17 114.7C189.95 310.62 163.56 433.07 153.01 482.05C149.66 497.59 134.51 507.61 118.9 504.62C112.94 503.48 124.8 505.75 119.25 504.69C102.87 501.55 92.47 485.32 96.46 469.13C109.22 417.36 141.13 287.93 192.19 80.85Z"
+       id="c4akzevdhN" />
+    <path
+       d="M180 430L180 400L210 400L210 430L180 430ZM230 420L230 390L260 390L260 420L230 420ZM280 410L280 380L310 380L310 410L280 410ZM330 390L330 370L350 370L350 390L330 390ZM190 390L190 360L220 360L220 390L190 390ZM240 380L240 350L270 350L270 380L240 380ZM290 360L290 340L310 340L310 360L290 360ZM340 350L340 330L360 330L360 350L340 350ZM200 350L200 320L230 320L230 350L200 350ZM250 330L250 310L270 310L270 330L250 330ZM300 320L300 300L320 300L320 320L300 320ZM350 310L350 290L370 290L370 310L350 310ZM210 300L210 280L230 280L230 300L210 300ZM260 290L260 270L280 270L280 290L260 290ZM310 280L310 260L330 260L330 280L310 280ZM360 270L360 260L370 260L370 270L360 270ZM220 260L220 240L240 240L240 260L220 260ZM270 250L270 230L290 230L290 250L270 250ZM320 240L320 230L330 230L330 240L320 240ZM370 230L370 220L380 220L380 230L370 230ZM230 220L230 200L250 200L250 220L230 220ZM280 210L280 200L290 200L290 210L280 210ZM330 200L330 190L340 190L340 200L330 200ZM240 180L240 170L250 170L250 180L240 180ZM290 170L290 160L300 160L300 170L290 170ZM250 140L250 130L260 130L260 140L250 140Z"
+       id="chwSrz4pq" />
+    <linearGradient
+       id="gradientd6Z03RofRk"
+       gradientUnits="userSpaceOnUse"
+       x1="380"
+       y1="197.48"
+       x2="157.24"
+       y2="464.15">
+      <stop
+         style="stop-color: #2285ff;stop-opacity: 1"
+         offset="0%"
+         id="stop5" />
+      <stop
+         style="stop-color: #333333;stop-opacity: 1"
+         offset="34.14661397002279%"
+         id="stop7" />
+      <stop
+         style="stop-color: #de2273;stop-opacity: 1"
+         offset="63.53011894896148%"
+         id="stop9" />
+      <stop
+         style="stop-color: #ffe700;stop-opacity: 1"
+         offset="100%"
+         id="stop11" />
+    </linearGradient>
+  </defs>
+  <g
+     id="g30"
+     transform="matrix(1.433534,0,0,1.433534,-25.177427,-99.67656)">
+    <g
+       id="g28">
+      <g
+         id="g18">
+        <use
+           xlink:href="#b12XMoy0dj"
+           id="use16"
+           style="opacity:1;fill:#747474;fill-opacity:1"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
+      <g
+         id="g22">
+        <use
+           xlink:href="#c4akzevdhN"
+           id="use20"
+           style="opacity:1;fill:#747474;fill-opacity:1"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
+      <g
+         id="g26">
+        <use
+           xlink:href="#chwSrz4pq"
+           id="use24"
+           style="opacity:1;fill:url(#gradientd6Z03RofRk)"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
+    </g>
+  </g>
+</svg>
