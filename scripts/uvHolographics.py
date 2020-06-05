@@ -12,8 +12,8 @@ bl_info = {
     "name": "uvHolographics",
     "description": "",
     "author": "Raphael Vorias",
-    "version": (0, 0, 6),
-    "blender": (2, 80, 0),
+    "version": (0, 0, 7),
+    "blender": (2, 80, 3),
     "location": "3D View > Tools",
     "warning": "", # used for warning icon and text in addons panel
     "wiki_url": "",
@@ -26,6 +26,7 @@ bl_info = {
 import bpy
 
 from bpy.props import (StringProperty,
+                       CollectionProperty,
                        BoolProperty,
                        IntProperty,
                        FloatProperty,
@@ -46,8 +47,9 @@ import os
 
 DEBUG = True
 PATH_UVHOLOGRAPHICS_LOGO = 'logo.png'
-TEXTURE_RESOLUTION = 2 # this will be multiplied by 1024
+TEXTURE_RESOLUTION = 4 # this will be multiplied by 1024
 MAIN_OBJECT_NAME = 'Cube'
+TARGET_COLLECTION = 'annotation'
 
 # global variable to store icons in
 custom_icons = None
@@ -62,6 +64,7 @@ def log(s):
     if DEBUG:
         print(s)
         
+        
 def create_image(name, k=1):
     '''creates defect textures'''
     
@@ -72,6 +75,7 @@ def create_image(name, k=1):
                             color=(0.0,0.0,0.0,0.0))
     else:
         log('-  create_image() : textures exists')
+             
                             
 def create_view_layers(context):
     '''todo: checks naming of view layers'''
@@ -80,9 +84,11 @@ def create_view_layers(context):
     if 'Ground Truth' not in context.scene.view_layers:
         context.scene.view_layers.new(name='ground_truth')
 
+
 def create_mode_switcher_node_group():
     # https://blender.stackexchange.com/questions/5387/how-to-handle-creating-a-node-group-in-a-script
     # create a group
+    
     if 'mode_switcher' not in bpy.data.node_groups:
         test_group = bpy.data.node_groups.new('mode_switcher', 'ShaderNodeTree')
         
@@ -119,6 +125,7 @@ def create_mode_switcher_node_group():
         test_group.links.new(node_mix.outputs[0], group_outputs.inputs['Switch'])
     else:
         log('-  create_mode_switcher_node_group() : node group already exists')
+      
         
 def add_camera_focus(context, cameraName, targetName):
     camera = context.scene.objects[cameraName]
@@ -131,9 +138,11 @@ def add_camera_focus(context, cameraName, targetName):
         tracker.up_axis = 'UP_Y'
     else:
         log('-  add_camera_focus() : camera constraint already exists')
+         
             
 def toggle_mode(context):
     '''helper function for background switching'''
+    
     scene = context.scene
     uvh = scene.uv_holographics
         
@@ -150,12 +159,14 @@ def toggle_mode(context):
                 
     # hack to update driver dependencies
     bpy.data.node_groups["mode_switcher"].animation_data.drivers[0].driver.expression = 'mode'
+          
             
 def render_layer(context,layer,id):
     '''
     Renders a specific layer, useful for compositing view.
     This function is mode agnostic.
     '''
+    
     scene = context.scene
     uvh = scene.uv_holographics
     context.window.view_layer = scene.view_layers[layer]
@@ -184,6 +195,26 @@ def run_variation(context):
     randZ = r*np.cos(theta)
     
     camera.location = (randX, randY, randZ)
+    
+
+def insert_mode_switcher_node(context,material):
+    '''Inserts a mode_switcher group node in the materials that are in target_collection'''
+    
+    log(f"checking for {material.name}")
+    for l in material.node_tree.links:
+        if l.to_socket.name == "Surface":
+            if l.from_socket.name == "Switch":
+                log("-  mode_switcher already inserted")
+            else:
+                log("found end link, operating ..")
+                open_node_pre = l.from_node
+                open_node_post = l.to_node
+                material.node_tree.links.remove(l)
+                group = material.node_tree.nodes.new(type="ShaderNodeGroup",)
+                group.node_tree = bpy.data.node_groups["mode_switcher"]
+                material.node_tree.links.new(open_node_pre.outputs[0], group.inputs[0])
+                material.node_tree.links.new(group.outputs[0], open_node_post.inputs[0])
+            log("[[done]]")
                 
 # ------------------------------------------------------------------------
 #    Scene Properties
@@ -210,6 +241,10 @@ class MyProperties(PropertyGroup):
         default = 1,
         min = 1,
         max = 500
+        )
+        
+    target_collection: PointerProperty(
+        type =bpy.types.Collection
         )
 
     output_dir: StringProperty(
@@ -242,7 +277,7 @@ class WM_OT_GenerateComponents(Operator):
         scene = context.scene
         uvh = scene.uv_holographics
         
-        log('-generating components')
+        log('-  generating components')
         # create blank textures
         for i in range(uvh.n_defects):
             create_image(name=f"defect{i}",k=2)
@@ -253,6 +288,22 @@ class WM_OT_GenerateComponents(Operator):
         log('[[done]]')
         
         return {'FINISHED'}
+                
+
+class WM_OT_UpdateMaterials(Operator):
+    '''Updates existing material nodes of objects in target_collection'''
+    
+    bl_label = "Update Materials"
+    bl_idname = "wm.update_materials"
+    
+    def execute(self, context):
+        
+        for o in context.scene.uv_holographics.target_collection.objects:        
+            for m in o.data.materials:
+                insert_mode_switcher_node(context,m)
+        
+        return {'FINISHED'}
+      
       
 class WM_OT_ToggleMaterials(Operator):
     '''Toggle between realistic view and ground truth'''
@@ -265,6 +316,7 @@ class WM_OT_ToggleMaterials(Operator):
         
         return {'FINISHED'}
     
+    
 class WM_OT_SampleVariation(Operator):
     '''Runs a sample variation'''
     
@@ -275,6 +327,7 @@ class WM_OT_SampleVariation(Operator):
         run_variation(context)
         
         return {'FINISHED'}
+            
             
 class WM_OT_StartScenarios(Operator):
     '''Vary camera positions'''
@@ -303,6 +356,7 @@ class WM_OT_StartScenarios(Operator):
         
         return {'FINISHED'}
 
+
 # ------------------------------------------------------------------------
 #    Panel in Object Mode
 # ------------------------------------------------------------------------
@@ -319,9 +373,11 @@ class OBJECT_PT_CustomPanel(Panel):
     def poll(self,context):
         return context.object is not None
     
+    
     def draw_header(self,context):
         global custom_icons
         self.layout.label(text="",icon_value=custom_icons["custom_icon"].icon_id)
+
 
     def draw(self, context):
         layout = self.layout
@@ -332,7 +388,9 @@ class OBJECT_PT_CustomPanel(Panel):
         box = layout.box()
         box.prop(uvh, "separate_background")  
         box.prop(uvh, "n_defects")
-        box.operator("wm.gen_components")        
+        box.operator("wm.gen_components")
+        box.prop(uvh, "target_collection")
+        box.operator("wm.update_materials")
         
         layout.label(text='Operations')
         box = layout.box()
@@ -373,11 +431,13 @@ class OBJECT_PT_CustomPanel(Panel):
 classes = (
     MyProperties,
     WM_OT_GenerateComponents,
+    WM_OT_UpdateMaterials,
     WM_OT_ToggleMaterials,
     WM_OT_SampleVariation,
     WM_OT_StartScenarios,
     OBJECT_PT_CustomPanel
 )
+
 
 def register():
     from bpy.utils import register_class
@@ -396,6 +456,7 @@ def register():
     custom_icons.load("custom_icon", os.path.join(icons_dir, "logo.png"), 'IMAGE')
         
     bpy.types.Scene.uv_holographics = PointerProperty(type=MyProperties)
+
 
 def unregister():
     from bpy.utils import unregister_class
