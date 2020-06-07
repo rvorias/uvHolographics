@@ -48,7 +48,7 @@ import os
 DEBUG = True
 PATH_UVHOLOGRAPHICS_LOGO = 'logo.png'
 TEXTURE_RESOLUTION = 4 # this will be multiplied by 1024
-MAIN_OBJECT_NAME = 'Cube'
+MAIN_OBJECT_NAME = 'Target'
 TARGET_COLLECTION = 'annotation'
 
 # global variable to store icons in
@@ -145,14 +145,16 @@ def toggle_mode(context):
     
     scene = context.scene
     uvh = scene.uv_holographics
-        
+            
     if uvh.mode == 0:
-        # set from realistic to ground truth
+        log("switching to GT")
+        context.window.view_layer = scene.view_layers['ground_truth']
         uvh.mode = 1
         scene.render.filter_size = 0
         scene.view_settings.view_transform = 'Standard'
     else:
-        # set from ground truth to realistic
+        log("switching to realistic")
+        context.window.view_layer = scene.view_layers['real']
         uvh.mode = 0
         scene.render.filter_size = 1.5
         scene.view_settings.view_transform = 'Filmic'
@@ -169,7 +171,7 @@ def render_layer(context,layer,id):
     
     scene = context.scene
     uvh = scene.uv_holographics
-    context.window.view_layer = scene.view_layers[layer]
+#    context.window.view_layer = scene.view_layers[layer]
     
     scene.render.filepath = f'{uvh.output_dir}{layer}/{id:04d}.png'
     bpy.ops.render.render(write_still=True,layer=layer)
@@ -195,6 +197,10 @@ def run_variation(context):
     randZ = r*np.cos(theta)
     
     camera.location = (randX, randY, randZ)
+    
+    # object variations
+    # e.g.
+    # bpy.data.materials["OBJECT"].node_tree.nodes["Value"].outputs[0].default_value = uniform(0,1)
     
 
 def insert_mode_switcher_node(context,material):
@@ -351,7 +357,7 @@ class WM_OT_StartScenarios(Operator):
             toggle_mode(context)
             
         # switch back to real scene
-        context.window.view_layer = scene.view_layers['real']
+#        context.window.view_layer = scene.view_layers['real']
         log('[[done]]')
         
         return {'FINISHED'}
