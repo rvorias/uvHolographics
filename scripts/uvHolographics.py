@@ -12,7 +12,7 @@ bl_info = {
     "name": "uvHolographics",
     "description": "",
     "author": "Raphael Vorias",
-    "version": (0, 0, 7),
+    "version": (0, 0, 8),
     "blender": (2, 80, 3),
     "location": "3D View > Tools",
     "warning": "", # used for warning icon and text in addons panel
@@ -148,13 +148,13 @@ def toggle_mode(context):
             
     if uvh.mode == 0:
         log("switching to GT")
-        context.window.view_layer = scene.view_layers['ground_truth']
+#        context.window.view_layer = scene.view_layers['ground_truth']
         uvh.mode = 1
         scene.render.filter_size = 0
         scene.view_settings.view_transform = 'Standard'
     else:
         log("switching to realistic")
-        context.window.view_layer = scene.view_layers['real']
+#        context.window.view_layer = scene.view_layers['real']
         uvh.mode = 0
         scene.render.filter_size = 1.5
         scene.view_settings.view_transform = 'Filmic'
@@ -199,8 +199,6 @@ def run_variation(context):
     camera.location = (randX, randY, randZ)
     
     # object variations
-    # e.g.
-    # bpy.data.materials["OBJECT"].node_tree.nodes["Value"].outputs[0].default_value = uniform(0,1)
     
 
 def insert_mode_switcher_node(context,material):
