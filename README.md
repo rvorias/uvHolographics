@@ -2,6 +2,18 @@
 
 uvHolographics is a small Blender add-on that helps you generate defect segmentation masks to enrich deep learning datasets. This might be useful in cases where there is a small amount of data, a heavy class imbalance, or the need to introduce specific instances that do not yet exist in the real world.
 
+Basic example: ball with scratches.
+<p float="left">
+<img src="./examples/github_images/ball_real.png" width="300" />
+<img src="./examples/github_images/ball_gt.png" width="300" />
+</p>
+
+Advanced example: motorcycle helmet with dents and scratches.
+<p float="left">
+<img src="./examples/github_images/helmet_real.png" width="300" />
+<img src="./examples/github_images/helmet_gt.png" width="300" />
+</p>
+
 ### Requirements
 
  - Blender >=2.82
@@ -16,17 +28,10 @@ uvHolographics is a small Blender add-on that helps you generate defect segmenta
 6. Check results.
 7. Generate instances.
 
-### Current state
+### Instructional Videos
 
-- Basic building blocks to create simple models are in place.
-
-### More advanced use cases
-
-- Fruit defects
-	- Model inspiration and textures: CG Boost
-- Cell phone defects
-	- Model inspiration: Derek Eliott
-	- Defect inspiration: Andrew Price
+1. Basic usage: https://www.youtube.com/watch?v=eZwOeBkLL8E
+2. Advanced case: motorcycle helmet: https://www.youtube.com/watch?v=iOIwj4IIdZU
 
 ### Deep Learning Demo
 
