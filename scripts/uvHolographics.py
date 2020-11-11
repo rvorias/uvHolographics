@@ -184,10 +184,11 @@ def run_variation(context):
     
     # assume one camera
     camera = context.scene.objects['Camera']
+    uvh = context.scene.uv_holographics
     
     # we assume a perimeter to sample our camera locations from
-    r = 4.0 + uniform(-0.2,8.0)
-    theta = np.pi/2 + uniform(-np.pi/8,np.pi/8)
+    r = uvh.camera_dist_mean + uniform(-uvh.camera_dist_var,uvh.camera_dist_var)
+    theta = np.pi/2 + uniform(-np.pi/4,np.pi/8)
     phi = uniform(0,2*np.pi)
     
     # create parameter
@@ -249,6 +250,10 @@ class MyProperties(PropertyGroup):
     target_object: PointerProperty(
         type =bpy.types.Object
         )
+        
+    target_collection: PointerProperty(
+        type =bpy.types.Collection
+        )
 
     output_dir: StringProperty(
         name = "Output folder",
@@ -265,6 +270,40 @@ class MyProperties(PropertyGroup):
         min = 0,
         max = 1
         )
+        
+    generate_real_only: BoolProperty(
+        name="Generate real only",
+        description="",
+        default = False
+        )
+    
+    # Camera
+    #-------------------------------
+    min_camera_angle: FloatProperty(
+        name = "Min camera angle",
+        default = 0.,
+        min = 0.,
+        max = 1.,
+        )
+    max_camera_angle: FloatProperty(
+        name = "Max camera angle",
+        default = 1.,
+        min = 0.,
+        max = 1.,
+        )
+    camera_dist_mean: FloatProperty(
+        name = "Camera dist mean",
+        default = 5.,
+        min = 0.,
+        max = 10.,
+        )
+    camera_dist_var: FloatProperty(
+        name = "Camera dist var",
+        default = 1.,
+        min = 0.,
+        max = 4.,
+        )
+     #-------------------------------
 
 # ------------------------------------------------------------------------
 #    Operators
@@ -349,9 +388,10 @@ class WM_OT_StartScenarios(Operator):
         for i in range(uvh.n_samples):
             run_variation(context)              
             render_layer(context, 'real', i+1)
-            toggle_mode(context)
-            render_layer(context, 'ground_truth', i+1)
-            toggle_mode(context)
+            if not uvh.generate_real_only:
+                toggle_mode(context)
+                render_layer(context, 'ground_truth', i+1)
+                toggle_mode(context)
             
         # switch back to real scene
 #        context.window.view_layer = scene.view_layers['real']
@@ -393,7 +433,15 @@ class OBJECT_PT_CustomPanel(Panel):
         box.prop(uvh, "n_defects")
         box.prop(uvh, "target_object")
         box.operator("wm.gen_components")
+        box.prop(uvh, "target_collection")
         box.operator("wm.update_materials")
+        
+        layout.label(text='Camera parameters')
+        box = layout.box()
+        box.prop(uvh,"min_camera_angle", slider=True)
+        box.prop(uvh,"max_camera_angle", slider=True)
+        box.prop(uvh,"camera_dist_mean", slider=True)
+        box.prop(uvh,"camera_dist_var", slider=True)
         
         layout.label(text='Operations')
         box = layout.box()
@@ -401,8 +449,8 @@ class OBJECT_PT_CustomPanel(Panel):
         box.operator("wm.sample_variation")
         
         layout.label(text='Generation')
-        
         box = layout.box()
+        box.prop(uvh, "generate_real_only")
         box.prop(uvh, "n_samples")
         box.prop(uvh, "output_dir")
         box.operator("wm.start_scenarios")
