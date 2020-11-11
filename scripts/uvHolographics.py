@@ -127,9 +127,8 @@ def create_mode_switcher_node_group():
         log('-  create_mode_switcher_node_group() : node group already exists')
       
         
-def add_camera_focus(context, cameraName, targetName):
+def add_camera_focus(context, cameraName, target):
     camera = context.scene.objects[cameraName]
-    target = context.scene.objects[targetName]
     
     if 'Track To' not in camera.constraints:
         tracker = camera.constraints.new(type='TRACK_TO')
@@ -247,8 +246,8 @@ class MyProperties(PropertyGroup):
         max = 500
         )
         
-    target_collection: PointerProperty(
-        type =bpy.types.Collection
+    target_object: PointerProperty(
+        type =bpy.types.Object
         )
 
     output_dir: StringProperty(
@@ -288,7 +287,7 @@ class WM_OT_GenerateComponents(Operator):
             
         create_view_layers(context)
         create_mode_switcher_node_group()
-        add_camera_focus(context,'Camera',MAIN_OBJECT_NAME) # updates viewport
+        add_camera_focus(context,'Camera',uvh.target_object) # updates viewport
         log('[[done]]')
         
         return {'FINISHED'}
@@ -392,8 +391,8 @@ class OBJECT_PT_CustomPanel(Panel):
         box = layout.box()
         box.prop(uvh, "separate_background")  
         box.prop(uvh, "n_defects")
+        box.prop(uvh, "target_object")
         box.operator("wm.gen_components")
-        box.prop(uvh, "target_collection")
         box.operator("wm.update_materials")
         
         layout.label(text='Operations')
